@@ -1,0 +1,994 @@
+<meta charset="utf-8">
+<title>Intro to Python: Teacher Edition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --rule-h:29px;
+    --bg:#EEF1FC;
+    --paper:#FFFFFF;
+    --paper-line:hsla(228,75%,58%,0.16);
+    --ink:#332E4D;
+    --ink-dim:#726E93;
+    --card:#F7F7FF;
+    --line:hsla(240,25%,45%,0.14);
+    --code-bg:#2B2755;
+    --code-text:#ECE9FF;
+    --code-dim:#9992C9;
+    --shadow:hsla(240,45%,35%,0.16);
+
+    --brand:#5D78E8;
+    --brand-2:#9B7CEA;
+    --brand-deep:#4657B8;
+
+    --box-def-k:#5B7FE0;     --box-def-bg:#EAF0FF;    --box-def-t:#fff;
+    --box-mistake-k:#E0688C; --box-mistake-bg:#FFE9F0; --box-mistake-t:#fff;
+    --box-remember-k:#DB9C22; --box-remember-bg:#FFF4DC; --box-remember-t:#3E2B00;
+    --box-practice-k:#38B07C; --box-practice-bg:#E4FAF0; --box-practice-t:#fff;
+    --box-analogy-k:#9370E5; --box-analogy-bg:#F1EBFF;  --box-analogy-t:#fff;
+    --box-predict-k:#2FAEC2; --box-predict-bg:#E4F8FA;  --box-predict-t:#fff;
+    --box-use-k:#E39355;     --box-use-bg:#FFEFE2;      --box-use-t:#3E2400;
+  }
+  *{box-sizing:border-box;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Nunito',-apple-system,BlinkMacSystemFont,sans-serif;
+    line-height:1.55;
+  }
+  h1,h2,h3{font-family:'Baloo 2',-apple-system,sans-serif; text-wrap:balance; margin:0;}
+  code,pre,.mono{font-family:'JetBrains Mono','SF Mono',Consolas,monospace;}
+  a{color:inherit;}
+
+  /* ---------- TOP NAV ---------- */
+  #topnav{
+    position:sticky; top:0; z-index:50;
+    display:flex; align-items:center; gap:14px;
+    background:linear-gradient(120deg, var(--brand), var(--brand-2));
+    padding:11px 16px;
+    box-shadow:0 4px 16px var(--shadow);
+  }
+  #topnav .brand{
+    display:flex; align-items:center; gap:9px;
+    font-family:'Baloo 2',sans-serif; font-weight:700; font-size:16px;
+    white-space:nowrap; flex:0 0 auto; color:#fff;
+  }
+  #topnav .brand .mark{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:28px; height:28px; border-radius:9px;
+    background:rgba(255,255,255,0.22); border:1px solid rgba(255,255,255,0.4);
+    font-family:'JetBrains Mono',monospace; font-weight:700; font-size:12px; color:#fff;
+  }
+  #topnav .brand b{font-weight:800; letter-spacing:.01em;}
+  #navchips{
+    display:flex; gap:6px; overflow-x:auto; flex:1 1 auto;
+    scrollbar-width:thin;
+  }
+  #navchips a{
+    flex:0 0 auto; display:inline-flex; align-items:center; gap:6px;
+    font-family:'Nunito',sans-serif; font-size:11.5px; font-weight:800;
+    letter-spacing:.01em; text-decoration:none;
+    padding:6px 12px; border-radius:20px; border:1px solid rgba(255,255,255,0.4);
+    color:rgba(255,255,255,0.95); white-space:nowrap; background:rgba(255,255,255,0.10);
+  }
+  #navchips a:hover{color:#fff; border-color:#fff; background:rgba(255,255,255,0.22);}
+  #navchips i{width:8px; height:8px; border-radius:50%; display:inline-block; background:var(--dot); box-shadow:0 0 0 2px rgba(255,255,255,0.55);}
+  #printbtn{
+    flex:0 0 auto; font-family:'Nunito',sans-serif; font-weight:800; font-size:12.5px;
+    background:#fff; color:var(--brand-deep); border:none; border-radius:20px;
+    padding:9px 16px; cursor:pointer;
+  }
+  #printbtn:hover{filter:brightness(1.05);}
+
+  main{max-width:820px; margin:0 auto; padding:36px 16px 90px;}
+
+  /* ---------- PAGE (lined sheet) ---------- */
+  .page{
+    position:relative;
+    background-color:var(--paper);
+    background-image:linear-gradient(var(--paper-line) 1.5px, transparent 1.5px);
+    background-size:100% var(--rule-h);
+    background-position:0 6px;
+    border-radius:22px;
+    box-shadow:0 14px 30px -16px var(--shadow), 0 3px 8px -2px var(--shadow);
+    padding:32px 34px 38px;
+    margin:0 0 28px;
+    overflow:hidden;
+  }
+  .page::after{
+    content:attr(data-tab);
+    position:absolute; top:22px; right:-1px;
+    font-family:'Nunito',sans-serif; font-weight:800; font-size:10.5px;
+    letter-spacing:.04em; text-transform:uppercase; color:var(--accent-strong);
+    background:var(--accent-soft); padding:7px 6px 7px 10px;
+    border-radius:10px 0 0 10px;
+    writing-mode:vertical-rl; text-orientation:mixed;
+  }
+  .pagehead{display:flex; align-items:center; gap:10px; margin-bottom:4px;}
+  .pagenum{
+    font-family:'Nunito',sans-serif; font-weight:800; font-size:11.5px;
+    color:var(--accent-strong); background:var(--accent-soft); padding:4px 10px; border-radius:20px;
+  }
+  .kicker{
+    font-family:'Nunito',sans-serif; font-weight:800; font-size:11.5px;
+    letter-spacing:.03em; text-transform:uppercase; color:var(--accent-strong);
+  }
+  .pagetitle{font-family:'Baloo 2',sans-serif; font-size:27px; font-weight:700; margin:6px 0 8px; color:var(--ink); padding-right:20px;}
+  .pagetitle::after{content:""; display:block; width:50px; height:5px; margin-top:8px; border-radius:3px; background:var(--accent-line);}
+  .lede{color:var(--ink-dim); font-size:14.5px; margin:14px 0 16px; max-width:62ch;}
+  .page p{margin:0 0 10px; max-width:66ch; line-height:var(--rule-h);}
+  .page h3.sub{font-family:'Baloo 2',sans-serif; font-size:16px; font-weight:600; margin:16px 0 6px; color:var(--accent-strong);}
+
+  /* ---------- BOXES ---------- */
+  .box{
+    background:var(--kbg); border:none; border-left:5px solid var(--k);
+    border-radius:16px; padding:14px 18px 16px; margin:16px 0;
+  }
+  .box p{line-height:1.6;}
+  .chip{
+    display:inline-block; font-family:'Nunito',sans-serif; font-weight:800; font-size:10.5px;
+    letter-spacing:.03em; text-transform:uppercase; color:var(--kt); background:var(--k);
+    padding:4px 11px; border-radius:20px; margin-bottom:9px;
+  }
+  .box p:last-child{margin-bottom:0;}
+  .box.def{--k:var(--box-def-k); --kbg:var(--box-def-bg); --kt:var(--box-def-t);}
+  .box.mistake{--k:var(--box-mistake-k); --kbg:var(--box-mistake-bg); --kt:var(--box-mistake-t);}
+  .box.remember{--k:var(--box-remember-k); --kbg:var(--box-remember-bg); --kt:var(--box-remember-t);}
+  .box.practice{--k:var(--box-practice-k); --kbg:var(--box-practice-bg); --kt:var(--box-practice-t);}
+  .box.analogy{--k:var(--box-analogy-k); --kbg:var(--box-analogy-bg); --kt:var(--box-analogy-t);}
+  .box.predict{--k:var(--box-predict-k); --kbg:var(--box-predict-bg); --kt:var(--box-predict-t);}
+  .box.use{--k:var(--box-use-k); --kbg:var(--box-use-bg); --kt:var(--box-use-t);}
+
+  /* ---------- CODE ---------- */
+  pre.code, code.inline{
+    font-family:'JetBrains Mono',monospace;
+  }
+  pre.code{
+    background:var(--code-bg); color:var(--code-text);
+    border-radius:14px; padding:14px 16px; font-size:13px; line-height:1.55;
+    overflow-x:auto; margin:10px 0;
+  }
+  pre.code .c{color:var(--code-dim); font-style:italic;}
+  code.inline{
+    background:var(--card); border:1px solid var(--line); border-radius:6px;
+    padding:1px 7px; font-size:.92em;
+  }
+
+  /* ---------- DIAGRAM / ASCII ---------- */
+  .diagram{
+    text-align:center; margin:14px 0; overflow-x:auto;
+  }
+  .diagram pre{
+    display:inline-block; text-align:left; font-family:'JetBrains Mono',monospace;
+    font-size:12.5px; line-height:1.5; background:var(--card); border:1.5px dashed var(--line);
+    border-radius:14px; padding:14px 20px; color:var(--ink); margin:0;
+  }
+  .diagram.center pre{text-align:center;}
+  .arrow{text-align:center; font-size:20px; color:var(--accent-strong); margin:2px 0; font-family:'JetBrains Mono',monospace;}
+
+  /* ---------- TABLES ---------- */
+  table.chart{width:100%; border-collapse:separate; border-spacing:0; margin:14px 0; font-size:13.5px; border-radius:12px; overflow:hidden; border:1px solid var(--line);}
+  table.chart th{
+    background:var(--accent-strong); color:#fff; text-align:left; padding:8px 12px;
+    font-family:'Nunito',sans-serif; font-size:11px; font-weight:800; letter-spacing:.03em; text-transform:uppercase;
+  }
+  table.chart td{padding:8px 12px; border-top:1px solid var(--line); vertical-align:top; background:var(--paper);}
+  table.chart tr:nth-child(even) td{background:var(--card);}
+  table.chart td code.inline{white-space:nowrap;}
+
+  /* ---------- FORM FIELDS (type-in & saved) ---------- */
+  input.fillin, textarea.fillin{
+    font-family:'Nunito',sans-serif; font-size:14.5px; font-weight:700; color:var(--ink);
+    background:var(--paper); border:2px solid hsla(230,55%,75%,0.55);
+    border-radius:10px; padding:5px 11px; min-width:120px;
+    outline:none; box-shadow:inset 0 1px 3px hsla(240,40%,30%,0.06);
+    transition:border-color .15s, box-shadow .15s; vertical-align:middle;
+  }
+  input.fillin:focus, textarea.fillin:focus{
+    border-color:var(--brand); box-shadow:0 0 0 3px hsla(232,85%,68%,0.25);
+  }
+  textarea.fillin{display:block; width:100%; resize:vertical; line-height:1.5; font-weight:600;}
+  textarea.fillin-block{min-height:2.4em;}
+
+  /* ---------- MISC ---------- */
+  .two-col{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  .drawbox{
+    border:2px dashed var(--accent-line); border-radius:16px; margin:14px 0;
+    background-color:var(--card); position:relative; padding:26px 12px 12px;
+  }
+  .drawbox .label{position:absolute; top:8px; left:12px; font-family:'Nunito',sans-serif; font-weight:800; font-size:10.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-dim);}
+  .drawbox textarea.fillin{background:transparent; border:none; box-shadow:none; min-height:90px; font-weight:500; padding:2px 4px;}
+  .drawbox textarea.fillin:focus{box-shadow:none;}
+  ul.tight, ol.tight{margin:6px 0 10px; padding-left:22px;}
+  ul.tight li, ol.tight li{margin-bottom:4px;}
+  .badge-list{display:flex; flex-wrap:wrap; gap:8px; margin:10px 0;}
+  .badge-list span{background:var(--card); border:1px solid var(--line); border-radius:20px; padding:5px 13px; font-size:12.5px; font-weight:600;}
+  hr.rule{border:none; border-top:2px dashed var(--line); margin:18px 0;}
+  .stamp{
+    display:inline-block; border:2.5px solid var(--accent-strong); color:var(--accent-strong); border-radius:14px;
+    padding:6px 14px; font-family:'Baloo 2',sans-serif; font-weight:700; font-size:12px;
+    letter-spacing:.02em; text-transform:uppercase; transform:rotate(-2deg);
+  }
+  .toc-grid{display:grid; grid-template-columns:1fr 1fr; gap:0 28px;}
+  .toc-sec{margin-bottom:14px;}
+  .toc-sec h4{font-family:'Nunito',sans-serif; font-size:11.5px; font-weight:800; letter-spacing:.03em; text-transform:uppercase; color:var(--accent-strong); margin:0 0 4px; display:flex; align-items:center; gap:6px;}
+  .toc-sec h4 i{width:9px; height:9px; border-radius:50%; background:var(--accent-strong); display:inline-block;}
+  .toc-sec ol{list-style:none; margin:0; padding:0; font-size:13px; color:var(--ink-dim);}
+  .toc-sec ol li{display:flex; justify-content:space-between; border-bottom:1px dotted var(--line); padding:3px 0;}
+  .toc-sec ol li b{color:var(--ink); font-weight:700;}
+
+  /* section hue assignment: pastel blue -> purple spectrum */
+  .sec-start{--hue:212;} .sec-first{--hue:218;} .sec-data{--hue:224;}
+  .sec-flow{--hue:230;} .sec-loops{--hue:236;} .sec-func{--hue:242;}
+  .sec-turtle{--hue:248;} .sec-random{--hue:254;} .sec-lists{--hue:259;}
+  .sec-game{--hue:264;} .sec-debug{--hue:269;} .sec-read{--hue:274;}
+  .sec-proj{--hue:279;} .sec-tool{--hue:212;}
+  .page{
+    --accent-strong: hsl(var(--hue) 58% 46%);
+    --accent-line: hsl(var(--hue) 62% 58%);
+    --accent-soft: hsl(var(--hue) 78% 93%);
+    --dot: hsl(var(--hue) 70% 62%);
+  }
+  @media (max-width:640px){
+    .page{padding:26px 20px 30px;}
+    .page::after{display:none;}
+    .two-col, .toc-grid{grid-template-columns:1fr;}
+  }
+
+  @media print{
+    @page{ size:letter; margin:0.35in; }
+    :root{ --rule-h:19px; }
+    body{background:#fff; font-size:12.5px; line-height:1.35;}
+    #topnav{display:none;}
+    main{max-width:none; padding:0;}
+    .page{
+      box-shadow:none; break-after:page; break-inside:avoid; margin:0; border-radius:0;
+      padding:6px 4px 4px;
+    }
+    .pagehead{margin-bottom:2px;}
+    .pagenum{font-size:9.5px; padding:2px 7px;}
+    .kicker{font-size:9.5px;}
+    .pagetitle{font-size:19px; margin:3px 0 3px; padding-right:0;}
+    .pagetitle::after{height:3px; width:36px; margin-top:4px;}
+    .lede{font-size:12px; margin:6px 0 7px;}
+    .page p{margin:0 0 5px; line-height:var(--rule-h);}
+    .page h3.sub{font-size:13px; margin:8px 0 3px;}
+    .box{padding:7px 11px 8px; margin:7px 0; border-radius:8px;}
+    .box p{line-height:1.35;}
+    .chip{font-size:8.5px; padding:2px 8px; margin-bottom:4px;}
+    pre.code{padding:7px 9px; font-size:10.5px; line-height:1.3; margin:5px 0; border-radius:7px;}
+    .diagram{margin:6px 0;}
+    .diagram pre{padding:7px 11px; font-size:10px; line-height:1.3; border-radius:7px;}
+    table.chart{margin:6px 0; font-size:11px;}
+    table.chart th{padding:4px 8px; font-size:9px;}
+    table.chart td{padding:4px 8px;}
+    ul.tight, ol.tight{margin:3px 0 5px;}
+    ul.tight li, ol.tight li{margin-bottom:1px;}
+    .badge-list{margin:5px 0; gap:5px;}
+    .badge-list span{padding:2px 9px; font-size:10.5px;}
+    hr.rule{margin:8px 0;}
+    .drawbox{padding:16px 10px 8px; margin:7px 0; min-height:0;}
+    .two-col{gap:8px;}
+    input.fillin, textarea.fillin{background:transparent; border:none; border-bottom:1.5px solid #999; border-radius:0; box-shadow:none; padding:1px 4px; font-size:12px;}
+    textarea.fillin-block{min-height:1.4em;}
+  }
+</style>
+
+<div id="topnav">
+  <div class="brand"><span class="mark">&gt;_</span><b>Intro to Python</b>&nbsp;Teacher Edition</div>
+  <div id="navchips">
+    <a href="#t1" style="--dot:hsl(212 70% 62%)"><i></i>Start</a>
+    <a href="#t6" style="--dot:hsl(218 70% 62%)"><i></i>First Steps</a>
+    <a href="#t8" style="--dot:hsl(224 70% 62%)"><i></i>Data &amp; Variables</a>
+    <a href="#t12" style="--dot:hsl(230 70% 62%)"><i></i>Control Flow</a>
+    <a href="#t13" style="--dot:hsl(236 70% 62%)"><i></i>Loops</a>
+    <a href="#t15" style="--dot:hsl(242 70% 62%)"><i></i>Functions</a>
+    <a href="#t17" style="--dot:hsl(248 70% 62%)"><i></i>Turtle Art</a>
+    <a href="#t21" style="--dot:hsl(254 70% 62%)"><i></i>Randomness</a>
+    <a href="#t22" style="--dot:hsl(259 70% 62%)"><i></i>Lists</a>
+    <a href="#t23" style="--dot:hsl(264 70% 62%)"><i></i>Game Logic</a>
+    <a href="#t25" style="--dot:hsl(269 70% 62%)"><i></i>Debugging</a>
+    <a href="#t26" style="--dot:hsl(274 70% 62%)"><i></i>Code Reading</a>
+    <a href="#t27" style="--dot:hsl(279 70% 62%)"><i></i>Project Design</a>
+    <a href="#t29" style="--dot:hsl(212 70% 62%)"><i></i>Toolbox</a>
+  </div>
+  <button id="printbtn" onclick="window.print()">Print</button>
+</div>
+
+<main>
+
+<!-- ============ T1 ============ -->
+<section class="page sec-start" id="t1" data-tab="Start Here">
+  <div style="text-align:center; padding:22px 0 6px;">
+    <div class="mono" style="letter-spacing:.25em; text-transform:uppercase; font-size:11.5px; font-weight:700; color:var(--ink-dim);">A Companion For</div>
+    <h1 style="font-family:'Baloo 2',sans-serif; font-weight:800; font-size:44px; margin:12px 0 6px; background:linear-gradient(120deg,var(--brand),var(--brand-2)); -webkit-background-clip:text; background-clip:text; color:transparent;">Intro to Python</h1>
+    <div class="mono" style="font-size:13px; font-weight:800; color:var(--accent-strong); letter-spacing:.06em;">TEACHER EDITION</div>
+    <div class="mono" style="font-size:11.5px; font-weight:700; color:var(--ink-dim); letter-spacing:.05em; margin-top:6px;">ANSWER KEYS - LESSON PLANS - ASSIGNMENTS - HISTORY BREAKS</div>
+  </div>
+  <div class="box def" style="margin-top:20px;">
+    <span class="chip">Paired With</span>
+    <p>This is the teacher's companion to the student <b>"Intro to Python Workbook."</b> Every section here uses the same color tab as the matching section in the student book, so you can find things by color even faster than by page number.</p>
+  </div>
+  <div class="box use">
+    <span class="chip">Session Info</span>
+    <p>Teacher: <input type="text" class="fillin" data-save="t-owner-teacher" style="min-width:180px;"> &nbsp; Student: <input type="text" class="fillin" data-save="t-owner-student" style="min-width:180px;"></p>
+    <p>Term start: <input type="text" class="fillin" data-save="t-owner-start" style="min-width:160px;"> &nbsp; Meeting days: <input type="text" class="fillin" data-save="t-owner-days" style="min-width:160px;"></p>
+  </div>
+  <p style="text-align:center; color:var(--ink-dim); margin-top:16px; font-size:13.5px;">Designed for two 1-hour sessions a week, over 5 weeks (10 sessions total).</p>
+</section>
+
+<!-- ============ T2 ============ -->
+<section class="page sec-start" id="t2" data-tab="Start Here">
+  <div class="pagehead"><span class="pagenum">T2</span><span class="kicker">Start Here</span></div>
+  <h1 class="pagetitle">How To Use This Edition</h1>
+  <p class="lede">Same page design as the student book, different job: this one is for you to read before or during a session, not for the student to write in.</p>
+
+  <table class="chart">
+    <tr><th>Box color</th><th>What it means here</th></tr>
+    <tr><td><span class="chip" style="--k:var(--box-def-k);--kt:var(--box-def-t)">Answer Key</span></td><td>The correct answer to a practice question from the student book.</td></tr>
+    <tr><td><span class="chip" style="--k:var(--box-mistake-k);--kt:var(--box-mistake-t)">Watch For</span></td><td>A struggle most students hit on this topic, and how to spot it early.</td></tr>
+    <tr><td><span class="chip" style="--k:var(--box-remember-k);--kt:var(--box-remember-t)">Assign This</span></td><td>A concrete task, often with a screenshot to submit.</td></tr>
+    <tr><td><span class="chip" style="--k:var(--box-practice-k);--kt:var(--box-practice-t)">What It Should Look Like</span></td><td>A description of correct output, so you can check work at a glance.</td></tr>
+    <tr><td><span class="chip" style="--k:var(--box-analogy-k);--kt:var(--box-analogy-t)">History Break</span></td><td>A short, true story about Python to read aloud. Optional, but fun.</td></tr>
+    <tr><td><span class="chip" style="--k:var(--box-predict-k);--kt:var(--box-predict-t)">Pacing Note</span></td><td>How long a section tends to take, and where you can cut or stretch.</td></tr>
+    <tr><td><span class="chip" style="--k:var(--box-use-k);--kt:var(--box-use-t)">Teaching Tip</span></td><td>A specific way to explain or demonstrate a tricky idea.</td></tr>
+  </table>
+
+  <div class="box remember">
+    <span class="chip">Assign This</span>
+    <p>Every page header names which student pages it covers, like <b>"Covers Student Pages 12-17."</b> Keep both books open side by side during a session.</p>
+  </div>
+</section>
+
+<!-- ============ T3 ============ -->
+<section class="page sec-start" id="t3" data-tab="Start Here">
+  <div class="pagehead"><span class="pagenum">T3</span><span class="kicker">Start Here</span></div>
+  <h1 class="pagetitle">The 5-Week Course Calendar</h1>
+  <p class="lede">Ten sessions, roughly one hour each. Every session lists which student pages to cover and any checkpoint due.</p>
+
+  <table class="chart">
+    <tr><th>Session</th><th>Topic</th><th>Student Pages</th><th>Checkpoint</th></tr>
+    <tr><td>1</td><td>First Steps: print, input, syntax</td><td>1-8</td><td>-</td></tr>
+    <tr><td>2</td><td>Variables, Data Map, Strings</td><td>9-17</td><td>-</td></tr>
+    <tr><td>3</td><td>Numbers, Booleans, None, Review</td><td>18-26</td><td>-</td></tr>
+    <tr><td>4</td><td>Control Flow, for Loops, range()</td><td>27-33</td><td>-</td></tr>
+    <tr><td>5</td><td>while Loops, Functions</td><td>34-40</td><td>-</td></tr>
+    <tr><td>6</td><td>Turtle Setup, Movement, Shapes</td><td>41-46</td><td><b>Screenshot 1</b>: a shape</td></tr>
+    <tr><td>7</td><td>Spirals, Flowers, Patterns</td><td>47-48</td><td><b>Screenshot 2</b>: original art</td></tr>
+    <tr><td>8</td><td>Randomness, Lists</td><td>49-54</td><td>-</td></tr>
+    <tr><td>9</td><td>Game State, Game Loop, Debugging</td><td>55-63</td><td><b>Screenshot 3</b>: mini game</td></tr>
+    <tr><td>10</td><td>Code Reading, Capstone Kickoff</td><td>64-73</td><td><b>Capstone</b> due next session</td></tr>
+  </table>
+
+  <div class="box predict">
+    <span class="chip">Pacing Note</span>
+    <p>This calendar is a default, not a contract. If a session runs long, push the leftover pages to the start of the next one - nothing here is time-sensitive except the capstone needing enough sessions left to actually build it. See <b>T4</b> for how loosely to hold this.</p>
+  </div>
+
+  <div class="box use" style="margin-top:14px;">
+    <span class="chip">General Notes</span>
+    <textarea class="fillin" data-save="t-calendar-notes" style="min-height:70px;" placeholder="running notes on pacing across the term..."></textarea>
+  </div>
+</section>
+
+<!-- ============ T4 ============ -->
+<section class="page sec-start" id="t4" data-tab="Start Here">
+  <div class="pagehead"><span class="pagenum">T4</span><span class="kicker">Start Here</span></div>
+  <h1 class="pagetitle">Grading &amp; Assessment Philosophy</h1>
+  <p class="lede">This is one-on-one tutoring, not a graded class - so keep assessment light and diagnostic, not evaluative.</p>
+
+  <div class="box use">
+    <span class="chip">Teaching Tip</span>
+    <p>For daily practice questions, use a simple 3-tier read on understanding instead of a score: <b>Got it</b> (explain back correctly, unprompted) - <b>Getting there</b> (gets it with a hint) - <b>Needs another look</b> (flip back to the page together next session).</p>
+  </div>
+
+  <div class="box remember">
+    <span class="chip">Assign This</span>
+    <p>Reserve an actual rubric (see <b>T28</b>) for the capstone project only - that's the one deliverable worth grading formally, since it's the thing a portfolio or parent update would reference.</p>
+  </div>
+
+  <h3 class="sub">On screenshot checkpoints</h3>
+  <p>Three checkpoints in this course ask the student to submit a screenshot (Sessions 6, 7, and 9), plus the capstone at the end. Pick one simple channel before Session 1 and stick with it:</p>
+  <ul class="tight">
+    <li>A shared folder (Google Drive, Dropbox) the student saves screenshots into</li>
+    <li>Emailing screenshots directly to you after each checkpoint session</li>
+    <li>A shared doc where screenshots get pasted inline with the date</li>
+  </ul>
+  <div class="box practice">
+    <span class="chip">What It Should Look Like</span>
+    <p>A good submission filename: <code class="inline">StudentName_Session6_Square.png</code>. It doesn't need to be fancy - it just needs to show the code and the output together (a split screen or two screenshots works fine).</p>
+  </div>
+</section>
+
+<!-- ============ T5 ============ -->
+<section class="page sec-start" id="t5" data-tab="Start Here">
+  <div class="pagehead"><span class="pagenum">T5</span><span class="kicker">Start Here</span></div>
+  <h1 class="pagetitle">Materials &amp; Setup Checklist</h1>
+
+  <table class="chart">
+    <tr><th>Item</th><th>Notes</th></tr>
+    <tr><td>Python installed</td><td>python.org, version 3.10+. Confirm with <code class="inline">python3 --version</code> in a terminal.</td></tr>
+    <tr><td>A code editor</td><td>IDLE (comes bundled with Python) is enough - no need for anything fancier yet.</td></tr>
+    <tr><td>turtle module</td><td>Built into standard Python. If drawings don't open a window, check the install includes <code class="inline">tkinter</code> (usually automatic on Windows/Mac).</td></tr>
+    <tr><td>No-install option</td><td>replit.com works for typed code, but its turtle support varies - test it yourself before Session 6.</td></tr>
+    <tr><td>Screenshot method</td><td>Confirm the student knows their device's screenshot shortcut before Session 6.</td></tr>
+  </table>
+
+  <div class="box mistake">
+    <span class="chip">Watch For</span>
+    <p>Turtle windows sometimes open <i>behind</i> other windows, or close instantly after the drawing finishes. Fix the second one by ending every turtle program with <code class="inline">turtle.done()</code> - it's worth mentioning once up front so it's not a mystery in Session 6.</p>
+  </div>
+
+  <div class="box use">
+    <span class="chip">Before Session 1</span>
+    <ul class="tight">
+      <li>[ ] Python runs and can print "Hello, world!"</li>
+      <li>[ ] Both books (student + this one) are open side by side</li>
+      <li>[ ] Submission method for screenshots is decided</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ T6 ============ -->
+<section class="page sec-first" id="t6" data-tab="First Steps">
+  <div class="pagehead"><span class="pagenum">T6</span><span class="kicker">First Steps</span></div>
+  <h1 class="pagetitle">Session 1 Plan</h1>
+  <p class="lede">Covers Student Pages 4-8: code/program/syntax vocabulary, print(), input(), and converting input().</p>
+
+  <div class="box predict">
+    <span class="chip">Pacing Note</span>
+    <p>~10 min vocabulary (p4) - ~15 min print() (p5-6) - ~15 min input() (p7-8) - remaining time: free practice writing small print/input programs together.</p>
+  </div>
+
+  <div class="box def">
+    <span class="chip">Answer Key</span>
+    <p><b>p6 predict:</b> <code class="inline">lives = 3</code> then <code class="inline">print(f"Lives left: {lives}")</code> outputs <code class="inline">Lives left: 3</code>.</p>
+    <p><b>p6 Try It fix:</b> <code class="inline">print("score")</code> should be <code class="inline">print(score)</code> (no quotes, or the variable's value never shows).</p>
+  </div>
+
+  <div class="box use">
+    <span class="chip">Teaching Tip</span>
+    <p>Have the student read code out loud, literally, before running it: "print, open paren, quote, Hello comma world, exclamation point, quote, close paren." Reading punctuation out loud catches missing quotes and parens faster than staring at it.</p>
+  </div>
+</section>
+
+<!-- ============ T7 ============ -->
+<section class="page sec-first" id="t7" data-tab="First Steps">
+  <div class="pagehead"><span class="pagenum">T7</span><span class="kicker">First Steps</span></div>
+  <h1 class="pagetitle">Common Struggles + History Break</h1>
+  <p class="lede">Covers Student Pages 4-8.</p>
+
+  <div class="box mistake">
+    <span class="chip">Watch For</span>
+    <p>Two mistakes appear almost every single Session 1: forgetting quotation marks around text, and mismatched or missing parentheses. Both are worth naming out loud as "the two classic first mistakes" - it takes the sting out of hitting them.</p>
+  </div>
+
+  <div class="box mistake">
+    <span class="chip">Watch For</span>
+    <p>Confusing <code class="inline">input()</code>'s return value: students often expect <code class="inline">age = input("Age? ")</code> to give a number. Let them hit the error on p8 themselves before showing the <code class="inline">int()</code> fix - the error is more memorable than the warning.</p>
+  </div>
+
+  <div class="box analogy">
+    <span class="chip">History Break - Read Aloud</span>
+    <p>"Python isn't named after the snake. Its creator, a Dutch programmer named Guido van Rossum, started writing it in December 1989 as a hobby project to keep busy over the holidays. He was reading scripts from the British comedy show <i>Monty Python's Flying Circus</i> at the time, and wanted a name that was short, a little unusual, and slightly mysterious - so he named his new language after the show. The snake logo came later, once people started making the joke anyway."</p>
+  </div>
+</section>
+
+<!-- ============ T8 ============ -->
+<section class="page sec-data" id="t8" data-tab="Data &amp; Variables">
+  <div class="pagehead"><span class="pagenum">T8</span><span class="kicker">Data &amp; Variables</span></div>
+  <h1 class="pagetitle">Session 2 Plan: Variables &amp; Strings</h1>
+  <p class="lede">Covers Student Pages 9-17: variables, naming, the data type map, and the full strings sequence.</p>
+
+  <div class="box predict">
+    <span class="chip">Pacing Note</span>
+    <p>Strings is the longest run of pages in the whole book (6 pages). If the session is tight, the data type map (p11) and naming rules (p10) can compress to 5 minutes each - strings deserves the remaining time.</p>
+  </div>
+
+  <div class="box def">
+    <span class="chip">Answer Key</span>
+    <p><b>p9 predict:</b> <code class="inline">score = 5; score = score + 1; print(score)</code> -&gt; <code class="inline">6</code>.</p>
+    <p><b>p10 Try It:</b> valid names are <code class="inline">player_name</code> and <code class="inline">isAlive</code>. Invalid: <code class="inline">2lives</code> (starts with a digit), <code class="inline">high-score</code> (hyphens aren't allowed), <code class="inline">for</code> (reserved word).</p>
+    <p><b>p13 predict:</b> <code class="inline">word = "ha"; laugh = word * 3</code> -&gt; <code class="inline">hahaha</code>.</p>
+    <p><b>p14 Try It:</b> <code class="inline">word = "GAME"</code>, <code class="inline">word[1]</code> is <code class="inline">"A"</code>.</p>
+    <p><b>p15 predict:</b> <code class="inline">len("ROBOT")</code> -&gt; <code class="inline">5</code>; <code class="inline">name[-1]</code> -&gt; <code class="inline">"T"</code>.</p>
+    <p><b>p16 Try It:</b> <code class="inline">"play again".replace("play","quit")</code> -&gt; <code class="inline">"quit again"</code>.</p>
+  </div>
+</section>
+
+<!-- ============ T9 ============ -->
+<section class="page sec-data" id="t9" data-tab="Data &amp; Variables">
+  <div class="pagehead"><span class="pagenum">T9</span><span class="kicker">Data &amp; Variables</span></div>
+  <h1 class="pagetitle">String Roundup Answer Key</h1>
+  <p class="lede">Covers Student Page 17 (mini practice) and sets up Session 3.</p>
+
+  <div class="box def">
+    <span class="chip">Answer Key</span>
+    <p><b>1.</b> The data type of <code class="inline">"42"</code> is a string (<code class="inline">str</code>) - it's in quotes.</p>
+    <p><b>2.</b> <code class="inline">word = "SPACE"</code>: <code class="inline">word[0]</code> is <code class="inline">"S"</code>, <code class="inline">word[-1]</code> is <code class="inline">"E"</code>.</p>
+    <p><b>3.</b> <code class="inline">"go" * 3</code> prints <code class="inline">gogogo</code>.</p>
+    <p><b>4.</b> <code class="inline">print('It's a bug')</code> breaks because the apostrophe in <i>It's</i> closes the string early. Fix: use double quotes - <code class="inline">print("It's a bug")</code>.</p>
+  </div>
+
+  <div class="box mistake">
+    <span class="chip">Watch For</span>
+    <p>By this point students often start treating every quoted number as interchangeable with the real number. Ask them directly: "is <code class="inline">"5"</code> the number five?" - if they hesitate, revisit p12 before moving to Session 3's numbers content.</p>
+  </div>
+</section>
+
+<!-- ============ T10 ============ -->
+<section class="page sec-data" id="t10" data-tab="Data &amp; Variables">
+  <div class="pagehead"><span class="pagenum">T10</span><span class="kicker">Data &amp; Variables</span></div>
+  <h1 class="pagetitle">Session 3 Plan: Numbers &amp; Booleans</h1>
+  <p class="lede">Covers Student Pages 18-26: integers, floats, operators, conversion, Booleans, None, and the review roundup.</p>
+
+  <div class="box def">
+    <span class="chip">Answer Key</span>
+    <p><b>p18 predict:</b> <code class="inline">lives = 3; lives = lives - 1</code> -&gt; <code class="inline">2</code>.</p>
+    <p><b>p19 predict:</b> <code class="inline">x = 5; y = 2.0; x + y</code> -&gt; <code class="inline">7.0</code> (mixing int and float always gives a float).</p>
+    <p><b>p20 predict:</b> <code class="inline">10 // 3</code> -&gt; <code class="inline">3</code>; <code class="inline">10 % 3</code> -&gt; <code class="inline">1</code>.</p>
+    <p><b>p21 Try It:</b> <code class="inline">lives = lives - 1</code> becomes <code class="inline">lives -= 1</code>.</p>
+    <p><b>p23 predict:</b> <code class="inline">lives = 0; lives == 0</code> -&gt; <code class="inline">True</code>; <code class="inline">lives &gt; 0</code> -&gt; <code class="inline">False</code>.</p>
+    <p><b>p24 Try It:</b> <code class="inline">not False</code> -&gt; <code class="inline">True</code>.</p>
+    <p><b>p26 #1:</b> <code class="inline">"7"</code>=str, <code class="inline">7</code>=int, <code class="inline">7.0</code>=float, <code class="inline">True</code>=bool, <code class="inline">None</code>=NoneType.</p>
+    <p><b>p26 #2 predict:</b> <code class="inline">a = 4; b = "4"; a == b</code> -&gt; <code class="inline">False</code> (different types are never equal).</p>
+    <p><b>p26 #3 bug fix:</b> <code class="inline">age = input("Age: ")</code> needs to be <code class="inline">age = int(input("Age: "))</code> before adding 1.</p>
+  </div>
+</section>
+
+<!-- ============ T11 ============ -->
+<section class="page sec-data" id="t11" data-tab="Data &amp; Variables">
+  <div class="pagehead"><span class="pagenum">T11</span><span class="kicker">Data &amp; Variables</span></div>
+  <h1 class="pagetitle">Data-Type Confusions + History Break</h1>
+  <p class="lede">Covers Student Pages 18-26.</p>
+
+  <div class="box mistake">
+    <span class="chip">Watch For</span>
+    <p>Floor division (<code class="inline">//</code>) versus regular division (<code class="inline">/</code>) is genuinely confusing at first - both use a slash. Anchor it to the modulo (<code class="inline">%</code>) example on the same page: floor division and modulo are a matched pair (one gives the answer, the other gives the leftover), which is easier to remember than either alone.</p>
+  </div>
+
+  <div class="box use">
+    <span class="chip">Teaching Tip</span>
+    <p>For None (p25), don't over-explain it in Session 3 - it's genuinely abstract this early. A one-sentence definition plus "you'll see this again with functions" is enough. It clicks much faster once they hit a function with no <code class="inline">return</code> in Session 5.</p>
+  </div>
+
+  <div class="box analogy">
+    <span class="chip">History Break - Read Aloud</span>
+    <p>"The word 'Boolean' - True and False values - comes from George Boole, a mathematician who invented an entire system of logic using just true and false back in 1854, over a hundred years before the first electronic computer existed. Every single if-statement your student writes is built on math from the 1800s."</p>
+  </div>
+</section>
+
+<!-- ============ T12 ============ -->
+<section class="page sec-flow" id="t12" data-tab="Control Flow">
+  <div class="pagehead"><span class="pagenum">T12</span><span class="kicker">Control Flow</span></div>
+  <h1 class="pagetitle">Session 4 Plan: Control Flow</h1>
+  <p class="lede">Covers Student Pages 27-30: if, elif, else, nested conditions, and practice.</p>
+
+  <div class="box def">
+    <span class="chip">Answer Key</span>
+    <p><b>p28 predict:</b> with <code class="inline">score = 85</code>, only <code class="inline">"B"</code> prints - Python stops at the first True branch in an if/elif chain, so the second <code class="inline">elif score &gt;= 80</code> never runs even though it's also true.</p>
+    <p><b>p29 Try It:</b> <code class="inline">if has_key and enemies_defeated: print("The treasure room opens!")</code>.</p>
+    <p><b>p30 #1 predict:</b> <code class="inline">health = 0</code> -&gt; prints <code class="inline">Game Over</code>.</p>
+    <p><b>p30 #2 bug:</b> <code class="inline">if score &gt; 10</code> is missing its colon - fix: <code class="inline">if score &gt; 10:</code>.</p>
+    <p><b>p30 #3:</b> <code class="inline">if coins &gt;= 5: print("Buy a power-up!") else: print("Keep collecting.")</code></p>
+  </div>
+
+  <div class="box use">
+    <span class="chip">Teaching Tip</span>
+    <p>Act out the "player has key" flowchart (p28) physically - stand up, hold an imaginary key, and have the student decide which way to walk. Kinesthetic framing makes the branching stick better than reading it silently.</p>
+  </div>
+</section>
+
+<!-- ============ T13 ============ -->
+<section class="page sec-loops" id="t13" data-tab="Loops">
+  <div class="pagehead"><span class="pagenum">T13</span><span class="kicker">Loops</span></div>
+  <h1 class="pagetitle">Loops Answer Key</h1>
+  <p class="lede">Covers Student Pages 31-35, split across the end of Session 4 and start of Session 5.</p>
+
+  <div class="box def">
+    <span class="chip">Answer Key</span>
+    <p><b>p32 predict:</b> <code class="inline">for i in range(3): print(i)</code> -&gt; <code class="inline">0</code>, <code class="inline">1</code>, <code class="inline">2</code> on three lines.</p>
+    <p><b>p33 Try It:</b> <code class="inline">range(1, 5)</code> -&gt; <code class="inline">1, 2, 3, 4</code>.</p>
+    <p><b>p34 predict:</b> counts down <code class="inline">3</code>, <code class="inline">2</code>, <code class="inline">1</code>.</p>
+    <p><b>p35 #1:</b> the loop runs <code class="inline">5</code> times. <b>#2:</b> the fix is adding <code class="inline">count += 1</code> inside the loop body. <b>#3:</b> <code class="inline">for i in range(3): print("Enemy spawned")</code>.</p>
+  </div>
+</section>
+
+<!-- ============ T14 ============ -->
+<section class="page sec-loops" id="t14" data-tab="Loops">
+  <div class="pagehead"><span class="pagenum">T14</span><span class="kicker">Loops</span></div>
+  <h1 class="pagetitle">Loop Struggles + Session 5 Kickoff</h1>
+  <p class="lede">Covers Student Pages 31-35.</p>
+
+  <div class="box mistake">
+    <span class="chip">Watch For</span>
+    <p>Infinite loops are the single most common Session 4/5 event, and it's a good thing - it means they understand <code class="inline">while</code> is checking a real condition. Don't rush to fix it for them; ask "what would have to change for this to stop?" first.</p>
+  </div>
+
+  <div class="box mistake">
+    <span class="chip">Watch For</span>
+    <p><code class="inline">range()</code>'s "stops before the last number" rule (same pattern as string indexing) resurfaces as confusion here. If it's still shaky, the number-line diagram on p33 is worth redrawing together from scratch rather than just re-reading it.</p>
+  </div>
+
+  <div class="box predict">
+    <span class="chip">Pacing Note</span>
+    <p>If Session 4 finishes through p33, Session 5 opens with <code class="inline">while</code> loops (p34) fresh. If it only gets through p31-32, push while loops later and don't compress functions to make up the time - functions deserve their own full runway.</p>
+  </div>
+</section>
+
+<!-- ============ T15 ============ -->
+<section class="page sec-func" id="t15" data-tab="Functions">
+  <div class="pagehead"><span class="pagenum">T15</span><span class="kicker">Functions</span></div>
+  <h1 class="pagetitle">Session 5 Plan: Functions</h1>
+  <p class="lede">Covers Student Pages 36-40: what a function is, defining/calling, parameters vs. arguments, and return values.</p>
+
+  <div class="box def">
+    <span class="chip">Answer Key</span>
+    <p><b>p38 Try It:</b> in <code class="inline">def spawn_enemy(x, y):</code>, the parameters are <code class="inline">x</code> and <code class="inline">y</code>.</p>
+    <p><b>p39 predict:</b> <code class="inline">def double(n): return n * 2</code>, then <code class="inline">double(4)</code> -&gt; <code class="inline">8</code>.</p>
+    <p><b>p40 #1:</b></p>
+    <pre class="code">def square(n):
+    return n * n</pre>
+    <p><b>p40 #2 predict:</b> <code class="inline">is_alive(0)</code> -&gt; <code class="inline">False</code>; <code class="inline">is_alive(3)</code> -&gt; <code class="inline">True</code>.</p>
+    <p><b>p40 #3 vocabulary:</b> call = actually running the function; parameter = the placeholder name in the definition; argument = the real value passed in; return = sends a value back out; def = the keyword that defines a function.</p>
+  </div>
+</section>
+
+<!-- ============ T16 ============ -->
+<section class="page sec-func" id="t16" data-tab="Functions">
+  <div class="pagehead"><span class="pagenum">T16</span><span class="kicker">Functions</span></div>
+  <h1 class="pagetitle">Function Struggles + History Break</h1>
+  <p class="lede">Covers Student Pages 36-40.</p>
+
+  <div class="box mistake">
+    <span class="chip">Watch For</span>
+    <p>The single most common function bug: using <code class="inline">print()</code> inside a function instead of <code class="inline">return</code>, then being confused why <code class="inline">result = my_function()</code> stores <code class="inline">None</code>. This is p39's mistake box - if it comes up live, that's the moment to point back to it.</p>
+  </div>
+
+  <div class="box use">
+    <span class="chip">Teaching Tip</span>
+    <p>The "function machine" analogy (input in one side, output out the other) works best if you literally draw a box on paper and physically write values flowing through it for two or three example calls before touching the keyboard.</p>
+  </div>
+
+  <div class="box analogy">
+    <span class="chip">History Break - Read Aloud</span>
+    <p>"There's a hidden joke built into Python itself. If you type <code class="inline">import this</code> into any Python program and run it, it prints a poem called 'The Zen of Python' - 19 lines of guiding rules for writing good code, like 'Simple is better than complex.' A programmer named Tim Peters wrote it in 1999, and it's still built into every copy of Python today." (Try it together if there's a spare minute - it's a fun way to end the session.)</p>
+  </div>
+</section>
+
+<!-- ============ T17 ============ -->
+<section class="page sec-turtle" id="t17" data-tab="Turtle &amp; Visual Art">
+  <div class="pagehead"><span class="pagenum">T17</span><span class="kicker">Turtle &amp; Visual Art</span></div>
+  <h1 class="pagetitle">Session 6 Plan: Turtle Setup &amp; Movement</h1>
+  <p class="lede">Covers Student Pages 41-44: importing turtle, movement commands, coordinates, and color/style.</p>
+
+  <div class="box predict">
+    <span class="chip">Pacing Note</span>
+    <p>Budget extra time here versus other sessions - environment issues (a window that won't open, a missing <code class="inline">turtle.done()</code>) eat time in ways earlier sessions didn't. Test your own setup before the session using T5's checklist.</p>
+  </div>
+
+  <div class="box def">
+    <span class="chip">Answer Key</span>
+    <p><b>p42 Try It:</b> <code class="inline">t.penup()</code> before moving, <code class="inline">t.pendown()</code> after, with the actual move (<code class="inline">t.goto()</code> or <code class="inline">t.forward()</code>) in between.</p>
+    <p><b>p43 Try It:</b> 75 pixels directly below center is the coordinate <code class="inline">(0, -75)</code>.</p>
+  </div>
+
+  <div class="box mistake">
+    <span class="chip">Watch For</span>
+    <p>If the turtle window opens and then instantly closes, the program finished without a closing <code class="inline">turtle.done()</code> or <code class="inline">turtle.mainloop()</code> call - Python closed the window because there was nothing left keeping it open.</p>
+  </div>
+</section>
+
+<!-- ============ T18 ============ -->
+<section class="page sec-turtle" id="t18" data-tab="Turtle &amp; Visual Art">
+  <div class="pagehead"><span class="pagenum">T18</span><span class="kicker">Turtle &amp; Visual Art</span></div>
+  <h1 class="pagetitle">What It Should Look Like: Shapes</h1>
+  <p class="lede">Covers Student Pages 45-46: square, triangle, polygons, and stars.</p>
+
+  <div class="diagram">
+    <pre>SQUARE (p45)        TRIANGLE (p45)       HEXAGON (p46, sides=6)
++------+                 /\                  ___
+|      |                /  \                /   \
+|      |               /    \               \   /
++------+               ------                \_/</pre>
+  </div>
+
+  <div class="box practice">
+    <span class="chip">What It Should Look Like</span>
+    <p>A correct square or polygon always closes cleanly back to its starting point with no gap or overlap. If the shape doesn't close, the turn angle is wrong - check it against <code class="inline">360 / number_of_sides</code>.</p>
+  </div>
+
+  <div class="box def">
+    <span class="chip">Answer Key</span>
+    <p><b>p45 Try It:</b> a hexagon (6 sides) turns <code class="inline">360 / 6 = 60</code> degrees each step.</p>
+    <p><b>p46 Try It:</b> changing <code class="inline">sides = 8</code> to <code class="inline">sides = 3</code> draws a triangle.</p>
+  </div>
+
+  <div class="box practice">
+    <span class="chip">What It Should Look Like</span>
+    <p>A 5-point star (p46) should look like a classic star outline where the lines cross over themselves in the middle - that crossing is expected and correct, not a bug.</p>
+  </div>
+</section>
+
+<!-- ============ T19 ============ -->
+<section class="page sec-turtle" id="t19" data-tab="Turtle &amp; Visual Art">
+  <div class="pagehead"><span class="pagenum">T19</span><span class="kicker">Turtle &amp; Visual Art</span></div>
+  <h1 class="pagetitle">Session 7 Plan: Spirals, Flowers &amp; Screenshot 1</h1>
+  <p class="lede">Covers Student Pages 47-48: spirals, flowers, and nested-loop patterns.</p>
+
+  <div class="box practice">
+    <span class="chip">What It Should Look Like</span>
+    <p>The spiral (p47) should visibly grow outward in a loose square-ish coil - if it looks identical to a single square, the <code class="inline">length += 2</code> line is missing or not indented inside the loop.</p>
+  </div>
+  <div class="box practice">
+    <span class="chip">What It Should Look Like</span>
+    <p>The flower (p47) should look like 10 overlapping circles arranged evenly in a ring, forming a rosette/flower shape. If the circles are scattered instead of overlapping in a ring, the rotation angle (<code class="inline">360 / petals</code>) is off.</p>
+  </div>
+
+  <div class="box def">
+    <span class="chip">Answer Key</span>
+    <p><b>p47 Try It:</b> to draw 6 petals instead of 10, change <b>both</b> <code class="inline">range(10)</code> to <code class="inline">range(6)</code> <b>and</b> <code class="inline">t.left(36)</code> to <code class="inline">t.left(60)</code> (since <code class="inline">360 / 6 = 60</code>). Changing only one of the two produces a broken or overlapping ring.</p>
+  </div>
+
+  <div class="box remember">
+    <span class="chip">Assign This - Screenshot Checkpoint 1</span>
+    <p>Have the student pick their favorite drawing from Sessions 6-7 (a shape, a star, a spiral, or a flower) and screenshot both the code and the result. This is the first of three checkpoints - see <b>T4</b> for the submission method.</p>
+  </div>
+</section>
+
+<!-- ============ T20 ============ -->
+<section class="page sec-turtle" id="t20" data-tab="Turtle &amp; Visual Art">
+  <div class="pagehead"><span class="pagenum">T20</span><span class="kicker">Turtle &amp; Visual Art</span></div>
+  <h1 class="pagetitle">Turtle Troubleshooting + History Break</h1>
+  <p class="lede">Covers Student Pages 41-48.</p>
+
+  <div class="box mistake">
+    <span class="chip">Watch For</span>
+    <p>Stray diagonal lines across a drawing almost always mean a missing <code class="inline">penup()</code> before repositioning. It's the turtle equivalent of a syntax error - visually obvious once you know what to look for.</p>
+  </div>
+
+  <div class="box mistake">
+    <span class="chip">Watch For</span>
+    <p>Nested-loop patterns (p48) are the first time indentation depth actually matters for logic rather than just syntax. If the pattern draws all shapes stacked in one spot instead of rotating around, the rotation line is indented at the wrong level (inside the inner loop instead of after it).</p>
+  </div>
+
+  <div class="box analogy">
+    <span class="chip">History Break - Read Aloud</span>
+    <p>"Turtle graphics didn't start with Python. It was invented in the late 1960s for a teaching language called Logo, built by a researcher named Seymour Papert at MIT. His idea was that kids learn programming best by controlling something that moves in space - and some early classrooms used actual small robot turtles that rolled around on the floor dragging a real pen behind them, drawing on huge sheets of paper. Python's turtle module is a direct descendant of that original idea, over 50 years later."</p>
+  </div>
+</section>
+
+<!-- ============ T21 ============ -->
+<section class="page sec-random" id="t21" data-tab="Randomness">
+  <div class="pagehead"><span class="pagenum">T21</span><span class="kicker">Randomness</span></div>
+  <h1 class="pagetitle">Session 8 Plan: Randomness</h1>
+  <p class="lede">Covers Student Pages 49-50.</p>
+
+  <div class="box def">
+    <span class="chip">Answer Key</span>
+    <p><b>p49 predict:</b> <code class="inline">random.randint(1, 3)</code> can only ever produce <code class="inline">1</code>, <code class="inline">2</code>, or <code class="inline">3</code> - both endpoints are included.</p>
+    <p><b>p50 Try It:</b> <code class="inline">sides = random.randint(3, 10)</code>.</p>
+  </div>
+
+  <div class="box mistake">
+    <span class="chip">Watch For</span>
+    <p>Students sometimes expect <code class="inline">randint(1, 6)</code> to behave like <code class="inline">range(1, 6)</code> and exclude 6. Point directly at the contrast between the two rules on p49 and p33 - it's a deliberate, useful comparison, not just trivia.</p>
+  </div>
+
+  <div class="box analogy">
+    <span class="chip">History Break - Read Aloud</span>
+    <p>"Computers can't actually generate true randomness - they just follow instructions, and instructions aren't random. What Python's <code class="inline">random</code> module really does is run a mathematical formula that produces a long, unpredictable-looking sequence of numbers. It's called 'pseudo-random' - close enough to random for games and art, but technically a very complicated pattern."</p>
+  </div>
+</section>
+
+<!-- ============ T22 ============ -->
+<section class="page sec-lists" id="t22" data-tab="Lists">
+  <div class="pagehead"><span class="pagenum">T22</span><span class="kicker">Lists</span></div>
+  <h1 class="pagetitle">Lists Answer Key</h1>
+  <p class="lede">Covers Student Pages 51-54.</p>
+
+  <div class="box def">
+    <span class="chip">Answer Key</span>
+    <p><b>p52 predict:</b> <code class="inline">items = ["sword", "shield"]; items[0] = "axe"</code> -&gt; <code class="inline">['axe', 'shield']</code>.</p>
+    <p><b>p53 Try It:</b> <code class="inline">enemies.append("dragon")</code>.</p>
+    <p><b>p54 predict:</b> <code class="inline">scores = [70, 85, 90]</code> summed in a loop -&gt; <code class="inline">245</code>.</p>
+    <p><b>p54 Try It:</b> <code class="inline">for score in high_scores: print(score)</code>.</p>
+  </div>
+
+  <div class="box mistake">
+    <span class="chip">Watch For</span>
+    <p>Index errors on lists feel like a fresh bug to students even though it's the exact same rule as string indexing from Session 2. Naming that connection out loud ("remember index 0 from strings? same rule here") saves re-teaching from scratch.</p>
+  </div>
+</section>
+
+<!-- ============ T23 ============ -->
+<section class="page sec-game" id="t23" data-tab="Game Logic">
+  <div class="pagehead"><span class="pagenum">T23</span><span class="kicker">Game Logic</span></div>
+  <h1 class="pagetitle">Session 9 Plan: Game State &amp; Loop</h1>
+  <p class="lede">Covers Student Pages 55-58: game state, the game loop, and game vocabulary.</p>
+
+  <div class="box use">
+    <span class="chip">Teaching Tip</span>
+    <p>Run the input -&gt; update -&gt; check rules -&gt; output -&gt; repeat cycle (p56) as a live "you be the computer" exercise: you call out inputs, the student has to say out loud what the state variables become and what gets printed, one full cycle at a time.</p>
+  </div>
+
+  <div class="box mistake">
+    <span class="chip">Watch For</span>
+    <p>These four pages are conceptual and vocabulary-heavy with no code to run - it can feel slow after the hands-on turtle sessions. Keep it brisk; the real payoff lands on the next page when it all shows up together in actual code.</p>
+  </div>
+
+  <div class="box predict">
+    <span class="chip">Pacing Note</span>
+    <p>Don't let vocabulary (p57-58) eat more than 15 minutes total - it's meant to be a quick reference, not a memorization drill. The tracing exercise on p59 is where the time should go.</p>
+  </div>
+</section>
+
+<!-- ============ T24 ============ -->
+<section class="page sec-game" id="t24" data-tab="Game Logic">
+  <div class="pagehead"><span class="pagenum">T24</span><span class="kicker">Game Logic</span></div>
+  <h1 class="pagetitle">Mini Game Trace + Screenshot 3</h1>
+  <p class="lede">Covers Student Page 59.</p>
+
+  <div class="box def">
+    <span class="chip">Answer Key</span>
+    <p><b>Full trace</b> for <code class="inline">target = 4</code>, guesses 2 then 4:</p>
+    <ul class="tight">
+      <li>Guess 1 (<code class="inline">2</code>): not equal to 4 -&gt; prints <code class="inline">Try again.</code> -&gt; <code class="inline">attempts</code> becomes <code class="inline">1</code></li>
+      <li>Loop check: <code class="inline">attempts &lt; 3 and not won</code> is still True -&gt; loop continues</li>
+      <li>Guess 2 (<code class="inline">4</code>): equal to target -&gt; <code class="inline">won = True</code>, prints <code class="inline">You won in 2 tries!</code></li>
+      <li>Loop check: <code class="inline">not won</code> is now False -&gt; loop ends, final "out of tries" message is skipped</li>
+    </ul>
+  </div>
+
+  <div class="box remember">
+    <span class="chip">Assign This - Screenshot Checkpoint 2</span>
+    <p>Have the student run the dice or guessing game (from p59, or their own variation) to a full finish and screenshot the terminal output showing the whole playthrough, win or lose.</p>
+  </div>
+</section>
+
+<!-- ============ T25 ============ -->
+<section class="page sec-debug" id="t25" data-tab="Debugging">
+  <div class="pagehead"><span class="pagenum">T25</span><span class="kicker">Debugging</span></div>
+  <h1 class="pagetitle">Debugging: Coaching + History Break</h1>
+  <p class="lede">Covers Student Pages 60-63.</p>
+
+  <div class="box use">
+    <span class="chip">Teaching Tip</span>
+    <p>These pages have no fixed answers - the skill is the process (p61's Bug Detective steps), not a specific fix. When the student hits a real bug, resist fixing it yourself. Ask the questions from p61 out loud instead: "what did you expect? what actually happened?" Let them find the line.</p>
+  </div>
+
+  <div class="box mistake">
+    <span class="chip">Watch For</span>
+    <p>Watch for the student changing multiple things at once when a bug appears - it's the single habit most worth correcting this session. Physically stop them and ask "what's the one thing you're changing right now?"</p>
+  </div>
+
+  <div class="box analogy">
+    <span class="chip">History Break - Read Aloud</span>
+    <p>"The word 'bug' for a computer error is older than you'd think, and one story about it is even literally true. In 1947, a team led by computer scientist Grace Hopper found their computer, the Harvard Mark II, malfunctioning - and traced it to an actual moth stuck in one of its mechanical relays. They taped the moth into their logbook with the note 'first actual case of bug being found,' and the logbook still exists in a museum today."</p>
+  </div>
+</section>
+
+<!-- ============ T26 ============ -->
+<section class="page sec-read" id="t26" data-tab="Code Reading">
+  <div class="pagehead"><span class="pagenum">T26</span><span class="kicker">Code Reading</span></div>
+  <h1 class="pagetitle">Code Reading Answer Key</h1>
+  <p class="lede">Covers Student Pages 64-65.</p>
+
+  <div class="box def">
+    <span class="chip">Answer Key</span>
+    <p><b>p64 trace:</b> starting <code class="inline">x=5, y=2</code>. After <code class="inline">x = x + y</code>: <code class="inline">x=7, y=2</code>. After <code class="inline">y = x - y</code>: <code class="inline">x=7, y=5</code>. Final <code class="inline">print(x, y)</code> -&gt; <code class="inline">7 5</code>.</p>
+    <p><b>p65 #1:</b> <code class="inline">total</code> sums 1 through 5 -&gt; <code class="inline">15</code>.</p>
+    <p><b>p65 #2:</b> <code class="inline">mystery(7)</code> -&gt; <code class="inline">7 % 2</code> is <code class="inline">1</code>, not <code class="inline">0</code>, so it returns <code class="inline">"odd"</code>.</p>
+    <p><b>p65 #3:</b> the loop runs 3 times; the first printed line is <code class="inline">0 a</code>.</p>
+  </div>
+
+  <div class="box use">
+    <span class="chip">Teaching Tip</span>
+    <p>If the trace table on p64 is still shaky, have the student narrate each line as "the right side happens first, then gets stored" - the same rule from p9's variable box, just applied twice in a row.</p>
+  </div>
+</section>
+
+<!-- ============ T27 ============ -->
+<section class="page sec-proj" id="t27" data-tab="Project Design">
+  <div class="pagehead"><span class="pagenum">T27</span><span class="kicker">Project Design</span></div>
+  <h1 class="pagetitle">Session 10 Plan: Capstone Kickoff</h1>
+  <p class="lede">Covers Student Pages 66-67: the Game Design Blueprint and Planning Worksheet.</p>
+
+  <div class="box use">
+    <span class="chip">Teaching Tip</span>
+    <p>Your main job this session is scoping, not building. A student's first instinct is almost always to plan something too big. Push toward the smallest version of their idea that still has a clear win and lose condition - it can always grow later.</p>
+  </div>
+
+  <div class="box mistake">
+    <span class="chip">Watch For</span>
+    <p>A win or lose condition that isn't actually checkable in code ("win by having fun") is the most common blueprint gap. Ask directly: "what line of Python would check if they won?" If they can't answer, the condition needs to be more concrete.</p>
+  </div>
+
+  <div class="box remember">
+    <span class="chip">Assign This</span>
+    <p>By the end of this session, the student should leave with a filled-out blueprint and worksheet, and have started the smallest working piece (usually: one shape on screen, or one working input prompt). The full build happens as homework before the next check-in.</p>
+  </div>
+</section>
+
+<!-- ============ T28 ============ -->
+<section class="page sec-proj" id="t28" data-tab="Project Design">
+  <div class="pagehead"><span class="pagenum">T28</span><span class="kicker">Project Design</span></div>
+  <h1 class="pagetitle">Capstone Rubric + Final Submission</h1>
+
+  <table class="chart">
+    <tr><th>Criteria</th><th>Points</th><th>What to look for</th></tr>
+    <tr><td>Runs without crashing</td><td>2</td><td>Executes start to finish on a normal input.</td></tr>
+    <tr><td>Uses a loop</td><td>2</td><td>A <code class="inline">for</code> or <code class="inline">while</code> doing real repeated work.</td></tr>
+    <tr><td>Uses a function</td><td>2</td><td>At least one <code class="inline">def</code>, called at least once.</td></tr>
+    <tr><td>Uses a conditional</td><td>2</td><td>At least one meaningful <code class="inline">if</code>.</td></tr>
+    <tr><td>Clear win/lose condition</td><td>2</td><td>The player can tell the game ended, and why.</td></tr>
+    <tr><td>Visual element (bonus)</td><td>+1</td><td>Any use of <code class="inline">turtle</code>.</td></tr>
+    <tr><td>Readable code</td><td>2</td><td>Sensible variable names, at least one comment.</td></tr>
+  </table>
+
+  <div class="box remember">
+    <span class="chip">Assign This - Capstone Submission</span>
+    <p>Have the student submit their <code class="inline">.py</code> file plus a screenshot (or short screen recording) of it running. This is the final checkpoint of the course - treat it like a small showcase, not just a grade.</p>
+  </div>
+
+  <div class="box use">
+    <span class="chip">Score Tracker</span>
+    <p>Student: <input type="text" class="fillin" data-save="t-rubric-name" style="min-width:160px;"> &nbsp; Total: <input type="text" class="fillin" data-save="t-rubric-score" style="min-width:60px;"> / 13</p>
+    <textarea class="fillin" data-save="t-rubric-notes" style="min-height:60px;" placeholder="notes on what went well, what to revisit next..."></textarea>
+  </div>
+</section>
+
+<!-- ============ T29 ============ -->
+<section class="page sec-tool" id="t29" data-tab="Toolbox">
+  <div class="pagehead"><span class="pagenum">T29</span><span class="kicker">Toolbox</span></div>
+  <h1 class="pagetitle">Wrap-Up + What's Next</h1>
+  <p class="lede">Covers Student Pages 68-73: the reference section and capstone checklist.</p>
+
+  <div class="box use">
+    <span class="chip">Teaching Tip</span>
+    <p>Pages 68-72 in the student book are pure reference (symbols, vocabulary, the "when do I use this" chart, analogies) - there's nothing to key, but they're excellent for a quick verbal quiz: point at a symbol or term and ask the student to explain it cold.</p>
+  </div>
+
+  <div class="box analogy">
+    <span class="chip">History Break - Read Aloud</span>
+    <p>"Everything your student just learned - variables, loops, functions - are the same basic ideas running some of the biggest software in the world. Python powers huge parts of Instagram, helps NASA analyze data from space missions, runs Netflix's recommendation system, and is the language most modern AI tools are built in. The turtle drawings and dice games use the exact same core ideas, just at a much smaller scale."</p>
+  </div>
+
+  <div class="box predict">
+    <span class="chip">Pacing Note - What's Next</span>
+    <p>If continuing past 5 weeks, natural next directions: <b>pygame</b> for real interactive games with graphics and key input, <b>classes/objects</b> for more organized code, or more advanced turtle projects combining everything learned here into bigger art pieces.</p>
+  </div>
+
+  <div class="stamp" style="margin-top:10px;">Teacher Edition Complete</div>
+</section>
+
+</main>
+<script>
+  document.getElementById('navchips').addEventListener('click', function(e){
+    var a = e.target.closest('a');
+    if(!a) return;
+    e.preventDefault();
+    var el = document.querySelector(a.getAttribute('href'));
+    if(el) el.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block:'start'});
+  });
+
+  (function(){
+    var PREFIX = 'introToPythonTeacherEdition.';
+    function keyFor(el){ return PREFIX + el.dataset.save; }
+    function load(){
+      document.querySelectorAll('[data-save]').forEach(function(el){
+        try{
+          var v = localStorage.getItem(keyFor(el));
+          if(v !== null) el.value = v;
+        }catch(err){}
+      });
+    }
+    document.addEventListener('input', function(e){
+      var el = e.target;
+      if(!el.dataset || !el.dataset.save) return;
+      try{ localStorage.setItem(keyFor(el), el.value); }catch(err){}
+    });
+    try{ load(); }catch(err){}
+  })();
+</script>
